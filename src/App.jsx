@@ -13,6 +13,8 @@ const detector = await poseDetection.createDetector(
 const model = tf.sequential();
 
 const App = () => {
+  let [recording, setRecording] = useState(false);
+  let [poseRecord, setPoseRecord] = useState([]);
   let webcamRef = useRef(null);
   let canvasRef = useRef(null);
 
@@ -24,6 +26,12 @@ const App = () => {
         const { keypoints } = (
           await detector.estimatePoses(webcamRef.current.video)
         )[0];
+
+        setPoseRecord((pr) => {
+          pr.push(keypoints.map(({ x, y }) => ({ x: x/ctxW , y: y/ctxH  })));
+          return pr;
+        });
+
         let { x: x1, y: y1, score: s1 } = keypoints[5];
         let { x: x2, y: y2, score: s2 } = keypoints[6];
         let neck = { x: (x1 + x2) / 2, y: (y1 + y2) / 2, score: (s1 + s2) / 2 };
@@ -40,12 +48,10 @@ const App = () => {
     };
 
     let draw = (keypoints, ctx) => {
-
       ctx.clearRect(0, 0, ctxW, ctxH);
 
       ctx.fillStyle = "rgba(0,0,0,.7)";
       ctx.fillRect(0, 0, ctxW, ctxH);
-
 
       let lines = [
         [4, 2],
@@ -86,7 +92,7 @@ const App = () => {
           }
         });
         if (treshold) ctx.stroke();
-     });
+      });
 
       // ctx.fillStyle = "rgba(255,0,0,.6)";
       keypoints.map(({ x, y, score }) => {
@@ -96,7 +102,6 @@ const App = () => {
           ctx.fill();
         }
       });
-
     };
 
     webcamRef.current.video.addEventListener("loadeddata", () => {
@@ -111,11 +116,38 @@ const App = () => {
     });
   }, []);
 
+  const record = () => {
+    console.log("!");
+    setTimeout(() => console.log("3..."), 1000);
+    setTimeout(() => console.log("2..."), 2000);
+    setTimeout(() => console.log("1..."), 3000);
+    setTimeout(() => {
+      console.log("0!");
+      setRecording(true);
+    }, 4000);
+    setTimeout(() => {
+      console.log("stop");
+      setRecording(false);
+    }, 10000);
+  };
+
   return (
     <>
-      <h1>testing tf</h1>
       <canvas style={{ position: "absolute" }} ref={canvasRef} />
       <Webcam ref={webcamRef} />
+      <hr />
+      <button onClick={record}>record</button>
+      {recording && "recording"}
+      <pre
+        style={{
+          height: "300px",
+          overflow: "scroll",
+          background: "#efefef",
+          margin: "10px",
+        }}
+      >
+      {JSON.stringify(poseRecord, null, 2)}
+      </pre>
     </>
   );
 };
