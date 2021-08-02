@@ -27,7 +27,7 @@ const App = () => {
           await detector.estimatePoses(webcamRef.current.video)
         )[0];
 
-        setPoseRecord((pr) => {
+        recording && setPoseRecord((pr) => {
           pr.push(keypoints.map(({ x, y }) => ({ x: x/ctxW , y: y/ctxH  })));
           return pr;
         });
