@@ -1,6 +1,7 @@
 import React from "react";
 import { BrowserRouter as Router, Switch, Route, Link, Redirect } from "react-router-dom";
 import Collect from './Collect'
+import Train from './Train'
 import './index.css'
 
 const App = () => {
@@ -16,7 +17,7 @@ const App = () => {
           <Collect/>
         </Route>
         <Route path="/train">
-          <h1>train</h1>
+          <Train/>
         </Route>
         <Route path="/classify">
           <h1>classify</h1>
