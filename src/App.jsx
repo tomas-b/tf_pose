@@ -9,9 +9,6 @@ const detector = await poseDetection.createDetector(
   poseDetection.SupportedModels.MoveNet
 );
 
-// nn
-const model = tf.sequential();
-
 const App = () => {
   let [recording, setRecording] = useState(false);
   let [poseRecord, setPoseRecord] = useState({});
