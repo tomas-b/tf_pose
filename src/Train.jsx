@@ -51,6 +51,15 @@ const Train = () => {
     model.add(hidden)
     model.add(output)
 
+    let optimizer = tf.train.sgd(.2)
+
+    model.compile({
+      optimizer,
+      loss: 'categoricalCrossentropy'
+    })
+
+    model.fit(xs, ys).then(res => console.log(res))
+
   }
 
   return <>
