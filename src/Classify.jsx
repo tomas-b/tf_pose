@@ -5,9 +5,10 @@ import * as poseDetection from "@tensorflow-models/pose-detection";
 import * as tf from "@tensorflow/tfjs";
 
 // poseDetection
-const detector = await poseDetection.createDetector(
+let detector = null;
+poseDetection.createDetector(
   poseDetection.SupportedModels.MoveNet
-);
+).then(d => detector = d);
 
 let myModel = null;
 

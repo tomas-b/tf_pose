@@ -7,9 +7,10 @@ import { collectedData } from './data'
 import { useRecoilState } from 'recoil';
 
 // poseDetection
-const detector = await poseDetection.createDetector(
+let detector = null
+poseDetection.createDetector(
   poseDetection.SupportedModels.MoveNet
-);
+).then(d => detector = d);
 
 const Collect = () => {
   let [recording, setRecording] = useState(false);
