@@ -14,9 +14,14 @@ const model = tf.sequential();
 
 const App = () => {
   let [recording, setRecording] = useState(false);
-  let [poseRecord, setPoseRecord] = useState([]);
+  let [poseRecord, setPoseRecord] = useState({});
+  let [key, setKey] = useState(null);
   let webcamRef = useRef(null);
   let canvasRef = useRef(null);
+  const recRef = useRef(recording);
+  recRef.current = recording;
+  const keyRef = useRef(key);
+  keyRef.current = key;
 
   useEffect(() => {
     let ctx, ctxW, ctxH;
@@ -27,8 +32,10 @@ const App = () => {
           await detector.estimatePoses(webcamRef.current.video)
         )[0];
 
-        recording && setPoseRecord((pr) => {
-          pr.push(keypoints.map(({ x, y }) => ({ x: x/ctxW , y: y/ctxH  })));
+        (recRef.current) && setPoseRecord((pr) => {
+          let key = keyRef.current;
+          if(!(pr[key] instanceof Array)) pr[key] = []
+          pr[key].push(keypoints.map(({ x, y }) => ({ x: x/ctxW , y: y/ctxH  })));
           return pr;
         });
 
@@ -114,6 +121,7 @@ const App = () => {
       ctx = canvasRef.current.getContext("2d");
       loop();
     });
+
   }, []);
 
   const record = () => {
@@ -136,18 +144,15 @@ const App = () => {
       <canvas style={{ position: "absolute" }} ref={canvasRef} />
       <Webcam ref={webcamRef} />
       <hr />
+      class name: <input onChange={({target})=>{
+        setKey(target.value)
+        setRecording(false)
+      }}/>
       <button onClick={record}>record</button>
       {recording && "recording"}
       <pre
-        style={{
-          height: "300px",
-          overflow: "scroll",
-          background: "#efefef",
-          margin: "10px",
-        }}
-      >
-      {JSON.stringify(poseRecord, null, 2)}
-      </pre>
+        style={{height:'300px', background:'#efefef', overflow:'scroll'}}
+      >{JSON.stringify(poseRecord,null,2)}</pre>
     </>
   );
 };
