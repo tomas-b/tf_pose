@@ -68,7 +68,7 @@ const Train = () => {
   };
 
   const download = async () => {
-    const saveResult = await model.save("downloads://model");
+    const saveResult = await model.save("downloads://" + (+new Date()));
     console.log(saveResult)
   }
 
