@@ -1,17 +1,19 @@
 import React, { useState, useEffect, useRef } from "react";
 import Webcam from "react-webcam";
 import * as tf from "@tensorflow/tfjs";
+import { collectedData } from './data'
+import { useRecoilState } from 'recoil';
 
 let model = tf.sequential();
 
 const Train = () => {
 
-  let [data, setData] = useState(null);
+  let [data, setData] = useRecoilState(collectedData);
   let [loss, setLoss] = useState(null);
 
   const train = () => {
-    let json = JSON.parse(data);
-    let keys = Object.keys(json);
+
+    let keys = Object.keys(data);
 
     let _xs = [];
     let _ys = [];
@@ -19,7 +21,7 @@ const Train = () => {
     for (const [i, key] of keys.entries()) {
       // let y = keys.map( k => k === key ? 1 : 0 )
       let y = i;
-      json[key].map((pose) => {
+      data[key].map((pose) => {
         let x = pose.map(({ x, y }) => [x, y]).flat();
         _xs.push(x);
         _ys.push(y);
@@ -76,7 +78,7 @@ const Train = () => {
     <>
       <button onClick={train}>run 100 epochs</button>
       <button onClick={download}>download</button>
-      <textarea onChange={(e) => setData(e.target.value)}></textarea>
+      <textarea onChange={(e) => setData(JSON.parse(e.target.value))} defaultValue={JSON.stringify(data)}></textarea>
       <p>loss: {loss}</p>
     </>
   );

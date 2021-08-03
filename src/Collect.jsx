@@ -3,6 +3,8 @@ import Webcam from "react-webcam";
 import "@tensorflow/tfjs-backend-webgl";
 import * as poseDetection from "@tensorflow-models/pose-detection";
 import * as tf from "@tensorflow/tfjs";
+import { collectedData } from './data'
+import { useRecoilState } from 'recoil';
 
 // poseDetection
 const detector = await poseDetection.createDetector(
@@ -12,6 +14,7 @@ const detector = await poseDetection.createDetector(
 const Collect = () => {
   let [recording, setRecording] = useState(false);
   let [poseRecord, setPoseRecord] = useState({});
+  let [data, setData] = useRecoilState(collectedData);
   let [key, setKey] = useState(null);
   let webcamRef = useRef(null);
   let canvasRef = useRef(null);
@@ -48,7 +51,8 @@ const Collect = () => {
       } catch (e) {
         console.log(e);
       }
-      requestAnimationFrame(loop);
+
+      if( webcamRef.current ) requestAnimationFrame(loop);
     };
 
     let draw = (keypoints, ctx) => {
@@ -133,6 +137,7 @@ const Collect = () => {
     setTimeout(() => {
       console.log("stop");
       setRecording(false);
+      setData( ()=>poseRecord )
     }, 10000);
   };
 
