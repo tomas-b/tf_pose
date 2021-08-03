@@ -34,6 +34,23 @@ const Train = () => {
     xs.print()
     ys.print()
 
+
+    let model = tf.sequential()
+
+    let hidden = tf.layers.dense({
+      units: 16,
+      activation: 'sigmoid',
+      inputDim: 34
+    })
+
+    let output = tf.layers.dense({
+      units: keys.length,
+      activation: 'softmax'
+    })
+
+    model.add(hidden)
+    model.add(output)
+
   }
 
   return <>
