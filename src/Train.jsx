@@ -59,19 +59,23 @@ const Train = () => {
 
     model
       .fit(xs, ys, {
-        epochs: 150,
+        epochs: 100,
         shuffle: true,
+        callbacks: {
+          onEpochEnd: (n, log) => { setLoss(log.loss) }
+        }
       })
-      .then(async (res) => {
-        console.log(res);
-        const saveResult = await model.save("downloads://model");
-        console.log(saveResult);
-      });
   };
+
+  const download = async () => {
+    const saveResult = await model.save("downloads://model");
+    console.log(saveResult)
+  }
 
   return (
     <>
-      <button onClick={train}>run</button>
+      <button onClick={train}>run 100 epochs</button>
+      <button onClick={download}>download</button>
       <textarea onChange={(e) => setData(e.target.value)}></textarea>
       <p>loss: {loss}</p>
     </>
