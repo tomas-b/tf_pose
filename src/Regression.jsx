@@ -15,14 +15,14 @@ let myModel = null;
 const Regression = () => {
   let webcamRef = useRef(null);
   let canvasRef = useRef(null);
+  let canvas2Ref = useRef(null);
   let jsonRef = useRef(null);
   let binRef = useRef(null);
   let [prediction, setPrediction] = useState(null);
 
 
   useEffect(() => {
-    let ctx, ctxW, ctxH;
-
+    let ctx, ctxW, ctxH, ctx2, lastResult=.5;
     let loop = async () => {
 
       let result = null
@@ -58,10 +58,22 @@ const Regression = () => {
 
     let draw = (keypoints, ctx, result) => {
 
-      let color = result === null ? "rgba(155,0,100,.7)" : `rgba(${255 * (1-result)},0,${255 * result},.7)`
+      let color = result === null ? "rgba(155,0,100,.7)" : `rgba(${255 * (1-result)},0,${255 * result},.7)`;
+
+      // little canvas
+      ctx2.globalCompositeOperation = "copy";
+      ctx2.drawImage(ctx2.canvas,-4, 0);
+      ctx2.globalCompositeOperation = "source-over"
+      ctx2.fillStyle = "rgba(255,255,255,1)";
+      ctx2.fillRect(116, 0, 4, 50);
+      ctx2.fillStyle = result === null ? 'rgba(0,0,0,.3)' : color;
+      if(result === null) {
+        ctx2.fillRect(116, 23 , 4, 4 )
+      } else {
+        ctx2.fillRect(116, 5 + ((40 * result) - 2) , 4, 4 )
+      }
 
       ctx.clearRect(0, 0, ctxW, ctxH);
-
       ctx.fillStyle = "rgba(0,0,0,.7)";
       ctx.fillRect(0, 0, ctxW, ctxH);
 
@@ -123,6 +135,9 @@ const Regression = () => {
       ctxW = width;
       ctxH = height;
       ctx = canvasRef.current.getContext("2d");
+      ctx2 = canvas2Ref.current.getContext("2d");
+      ctx2.fillStyle = 'rgba(255,255,255,.1)'
+      ctx2.fillRect(0,0,120,50)
       loop();
     });
 
@@ -138,6 +153,7 @@ const Regression = () => {
   return (
     <>
       <canvas style={{ position: "absolute" }} ref={canvasRef} />
+      <canvas style={{ position: "absolute", margin: "5px" }} height={50} width={120} ref={canvas2Ref} />
       <Webcam ref={webcamRef} />
       <hr />
       <h1>regression</h1>
