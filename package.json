@@ -4,6 +4,7 @@
   "scripts": {
     "dev": "vite",
     "build": "vite build",
+    "build2": "vite build --base=/tf_pose/",
     "serve": "vite preview"
   },
   "dependencies": {

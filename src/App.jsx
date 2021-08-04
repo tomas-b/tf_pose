@@ -10,6 +10,8 @@ import { RecoilRoot } from "recoil";
 import Collect from "./Collect";
 import Train from "./Train";
 import Classify from "./Classify";
+import TrainRegression from "./TrainRegression";
+import Regression from "./Regression";
 import "./index.css";
 
 const App = () => {
@@ -18,8 +20,13 @@ const App = () => {
     <Router>
       <nav>
         <Link to="/collect">Collect</Link>
+         - [
         <Link to="/train">Train</Link>
         <Link to="/classify">Classify</Link>
+         ] - [
+        <Link to="/trainRegression">Train Regression</Link>
+        <Link to="/regression">regression</Link>
+         ]
       </nav>
       <Switch>
         <Route path="/collect">
@@ -30,6 +37,12 @@ const App = () => {
         </Route>
         <Route path="/classify">
           <Classify />
+        </Route>
+        <Route path="/trainRegression">
+          <TrainRegression />
+        </Route>
+        <Route path="/regression">
+          <Regression />
         </Route>
         <Redirect from="/" to="/collect" />
       </Switch>
